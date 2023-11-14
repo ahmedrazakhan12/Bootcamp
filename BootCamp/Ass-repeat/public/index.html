@@ -1,0 +1,95 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+</head>
+
+<body>
+    <button id="createFileBtn">Create File</button>
+    <button id="read">Show File</button>
+    <textarea id="output" cols="30" rows="10"></textarea>
+    <button id="update">Update</button>
+    <button id="delete">Delete</button>
+
+    <script>
+        document.getElementById('createFileBtn').addEventListener('click', function () {
+            fetch('/create-file',
+                { method: 'POST' },
+            )
+                .then(response => response.text())
+                .then(data => {
+                    alert(data);
+                }).catch(error => {
+                    console.error('Error', error);
+                })
+        });
+        document.getElementById('read').addEventListener('click', function () {
+            fetch('/read-file')
+                .then(response => {
+                    if (!response.ok) {
+                        console.log('File Rejected');
+                        throw new Error('File Rejected');
+                    }
+                    return response.text();
+                })
+                .then(data => {
+                    document.getElementById('output').textContent = data;
+                })
+                .catch(error => {
+                    console.error('Error:', error);
+                })
+        })
+        const fileContent = document.getElementById('output');
+        document.getElementById('update').addEventListener('click', function () {
+            fetch('/update-file', {
+                method: 'PUT', body: JSON.stringify({ content: fileContent.value }), headers: {
+                    'Content-Type': 'application/json',
+                },
+            })
+
+                .then(response => {
+                    if (!response.ok) {
+                        throw new error('FAiled to update');
+                    }
+                    return response.text;
+                })
+                .then(data => {
+                    console.log('File Updated', data);
+                    alert('File Updated');
+                })
+                .catch(error => {
+                    console.error('ERror in client side', error)
+                })
+
+        })
+        document.getElementById('delete').addEventListener('click',function(){
+            fetch('/delete-file',{
+                method: 'DELETE'
+            })
+
+            .then(response => {
+                if(!response.ok){
+                throw new error('Failed to delete')
+            }
+            return response.text();
+        })
+       
+            .then(data => {
+                document.getElementById('output').value;
+                console.log('File Deleted!')
+                alert('File deleted')
+            })
+
+            .catch(err => {
+            if(err){
+                console.log('Error',err)
+            }
+            })
+        })
+    </script>
+</body>
+
+</html>

@@ -1,0 +1,124 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 0;
+            padding: 0;
+            background-color: #f0f0f0;
+            text-align: center;
+        }
+
+        button {
+            padding: 10px 20px;
+            margin: 5px;
+            background-color: #3498db;
+            color: #fff;
+            border: none;
+            cursor: pointer;
+        }
+
+        textarea {
+            width:   100%;
+            height: 300px;
+            padding: 10px;
+            margin:  10px;
+        }
+    </style>
+</head>
+
+<body>
+    <!-- <-- Alt + Shift + F -- -->
+    <button id="btn">Create File</button>
+    <button id="showFileBtn">Show</button>
+    <textarea id="fileContent" cols="30" rows="10"></textarea>
+    <button id="update">Update</button>
+    <button id="delete">Delete</button>
+    
+    <script>
+        document.getElementById('btn').addEventListener('click', function () {
+            fetch('/create-file', {
+                method: 'POST'
+            })
+                .then(response => response.text())
+                .then(data => {
+                    alert(data);
+                }).catch(error => {
+                    console.log('Error', error);
+                    
+                })
+        });
+      
+
+        document.getElementById('showFileBtn').addEventListener('click', function () {
+            fetch('/read-file')
+                .then(response => {
+                    if (!response.ok) {
+                        throw new Error('Network response was not ok');
+                    }
+                    return response.text();
+                   
+                })
+                .then(data => {
+                    document.getElementById('fileContent').textContent = data;
+                })
+                .catch(error => {
+                    console.error('Error:', error);
+                });
+        });
+        document.getElementById('delete').addEventListener('click', function () {
+            fetch('/delete-file', {
+                method: 'DELETE'
+            })
+                .then(response => {
+                    if (!response.ok) {
+                        throw new Error('Failed to Delete.');
+                    }
+                    return response.text();
+                })
+                .then(data => {
+                    fileContent.value = '';
+                    console.log("File Deleted", data)
+                    alert('File deleted'); // Display an alert on the client side
+
+                })
+                .catch(error => {
+                    console.error('Error:', error);
+                });
+
+        })
+        const fileContent = document.getElementById('fileContent');
+        document.getElementById('update').addEventListener('click', function () {
+            fetch('/update-file', {
+                method: 'PUT',
+                headers: {
+                    'Content-Type': 'application/json',
+                },
+                body: JSON.stringify({ content: fileContent.value }),
+            })
+                .then(response => {
+                    if (!response.ok) {
+                        throw new Error('Failed to Update.');
+                    }
+                    return response.text();
+                })
+                .then(data => {
+                    console.log("File Updated", data)
+                    alert('File Update'); // Display an alert on the client side
+
+                })
+                .catch(error => {
+                    console.error('Error:', error);
+                });
+
+        })
+    </script>
+
+</body>
+
+</html>

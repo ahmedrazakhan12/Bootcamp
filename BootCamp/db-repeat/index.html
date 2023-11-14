@@ -1,0 +1,73 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+    <link rel="stylesheet" href="style.css">
+
+</head>
+
+<body>
+   <center> <form action="/submit" method="post">
+
+        <!-- ---------------------first name ------------------------ -->
+        <input type="text" name="name" id="name" placeholder="First name"><br><br>
+
+        <!-- ----------------------surname------------------------------- -->
+        <input type="text" name="surname" id="surname" placeholder="Surname"><br><br>
+
+        <!-- -------------------Mobile No && Email Adress ------------------>
+        <input type="email" name="email" id="email" placeholder="Mobile no or email address"><br><br>
+
+        <!-- ---------------------Password----------------------------------- -->
+        <input type="password" name="password" id="password" placeholder="Password"><br><br>
+
+        <!-- -----------------------Gender---------------------------------- -->
+        <label for="gender">Select Gender:</label>
+        <select id="gender" name="gender">
+            <option value="male">Male</option>
+            <option value="female">Female</option>
+            <option value="other">Other</option>
+        </select>
+        <input type="submit" value="Submit">
+
+    </form></center>
+
+    <ul id="dataList"></ul>
+
+
+    <script>
+        document.addEventListener('DOMContentLoaded', function () {
+            fetch('/get-data', { method: 'GET' })
+                .then(response => {
+                    if (!response.ok) {
+                        throw new Error('Network was not working')
+                    }
+                    return response.json();
+                })
+                .then(data => {
+                    const userList = document.getElementById('datalist');
+                    data.forEach(user => {
+                        const listItem = document.createElement('li');
+                        listItem.textContent = `FirstName: ${user.name}, Surname: ${user.surname}, Email address: ${user.email}, Password: ${user.password}, Gender: ${user.gender}`;
+                        dataList.appendChild(listItem);
+                    });
+
+                }).catch(error => {
+                    console.error('Error:', error);
+                });
+        })
+    </script>
+
+
+
+
+
+
+
+
+</body>
+
+</html>

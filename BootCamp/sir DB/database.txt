@@ -1,0 +1,23 @@
+
+->npm init -y
+->npm install express mysql body-parser
+-> npm i mysql -- Driver 
+-> npm i body-parser -- Midleware(HTML ---- Body.Parse)
+https://expressjs.com/en/guide/database-integration.html#mysql
+-> Create a Database 
+-> Create a Table
+-----------------------------------------------------------
+->collection of record is called Database 
+->Mysql
+->SQL
+->MangoDB
+-------------------------------------------------
+const mysql = require('mysql')
+const connection = mysql.createConnection({
+  host: 'localhost',
+  user: 'root',
+  password: '',
+  database: 'school'
+})
+
+connection.connect()

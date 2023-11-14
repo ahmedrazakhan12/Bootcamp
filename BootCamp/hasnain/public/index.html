@@ -1,0 +1,125 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Create File</title>
+    <style>
+        body {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        .container {
+            margin-top: 50px;
+            background-color: #d4cdcd;
+            align-items: center;
+            border: 2px solid #f98c8c;
+            max-width: 30%;
+            padding: 20px 20px;
+        }
+         button {
+            padding: 15px 20px;
+            background-color: #f98c8c;
+            margin: 10px 10px;
+            outline: none;
+            border: none;
+            border-radius: 10px;
+        }
+    </style>
+</head>
+<body>
+    <center><div class="container">
+        <center><div><button id="createFileBtn">Create File</button>
+        <button id="showFileBtn">Show File</button></div></center>
+        <center><div><textarea name="" id="fileContent" cols="28" rows="10"></textarea></div></center>
+        <center><div><button id="updateFileBtn">Update File</button>
+        <button id="deleteFileBtn">Delete File</button></div></center>
+    </div></center>
+
+
+
+    <script>
+        // Create File
+
+        document.getElementById('createFileBtn').addEventListener('click', function() {
+            fetch('/create-file', {
+                method: 'POST'
+            })
+            .then(response => response.text())
+            .then(data => {
+                alert(data);
+            })
+            .catch(error => {
+                console.error('Error:', error);
+            });
+        });
+
+        //Show File
+
+document.getElementById('showFileBtn').addEventListener('click', function() {
+    fetch('/read-file')
+    .then(response => {
+        if (!response.ok) {
+            throw new Error('Network response was not ok');
+        }
+        return response.text();
+    })
+    .then(data => {
+        document.getElementById('fileContent').textContent = data;
+    })
+    .catch(error => {
+        console.error('Error:', error);
+    });
+});
+     
+
+        //Update File
+const updatedContent =  document.getElementById('fileContent');
+document.getElementById('updateFileBtn').addEventListener('click', function() {
+    fetch('/update-file',{
+        method : 'PUT',
+        headers : {
+            'Content-Type': 'application/json',
+        },
+        body : JSON.stringify({content: updatedContent.value}),
+    })
+
+    .then(response => {
+        if (!response.ok) {
+            throw new Error('Network response was not ok');
+        }
+        return response.text();
+    })
+    .then(data => {
+       console.log('File updated',data);
+       alert('File updated');
+    })
+    .catch(error => {
+        console.error('Error in client sdie', error);
+    })
+});
+
+
+        //Delete File
+
+document.getElementById('deleteFileBtn').addEventListener('click', function() {
+    fetch('/delete-file',{method: 'DELETE'})
+
+    .then(response => {
+        if (!response.ok) {
+            throw new Error('Network response was not ok');
+        }
+        return response.text();
+    })
+    .then(data => {
+       alert('file deleted');
+       console.log('File Deleted')
+    })
+    .catch(error =>{
+        console.error('Error in client sdie', error);
+    });
+});
+    </script>
+</body>
+</html>
